@@ -1,0 +1,6 @@
+/venv/
+/intelius/data/
+/intelius/creds.py
+/intelius/results/
+/intelius/input.csv
+/intelius/bank.csv
