@@ -6,6 +6,7 @@ from selenium.common.exceptions import NoSuchElementException
 from time import sleep
 import os
 from pathlib import Path
+import pandas as pd
 
 from intelius import creds
 
@@ -16,12 +17,25 @@ url = "https://www.intelius.com/dashboard"
 path = os.getcwd()
 Path(f"{path}/data/UserData").mkdir(parents=True, exist_ok=True)
 
+if not os.path.isfile("bank.csv"):
+    headers = [
+        {
+            'First Name': '',
+            'Last Name': '',
+            'Email': '',
+            'Job Title': '',
+            'Street Address': '',
+        }
+    ]
+    df = pd.DataFrame(headers)
+    df.to_csv("bank.csv", index=False)
+
 browser_profile = webdriver.ChromeOptions()
 browser_profile.add_argument('--profile-directory=Default')
 service = Service(ChromeDriverManager().install())
 browser_profile.add_argument(f'--user-data-dir={path}/data/UserData')
 # browser_profile.add_argument(f'--headless')
-driver = webdriver.Chrome( options=browser_profile, service=service)
+driver = webdriver.Chrome(options=browser_profile, service=service)
 
 driver.get(url)
 sleep(10)
