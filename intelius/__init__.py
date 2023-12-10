@@ -1,5 +1,6 @@
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 from time import sleep
@@ -17,9 +18,10 @@ Path(f"{path}/data/UserData").mkdir(parents=True, exist_ok=True)
 
 browser_profile = webdriver.ChromeOptions()
 browser_profile.add_argument('--profile-directory=Default')
+service = Service(ChromeDriverManager().install())
 browser_profile.add_argument(f'--user-data-dir={path}/data/UserData')
 # browser_profile.add_argument(f'--headless')
-driver = webdriver.Chrome(ChromeDriverManager().install(), options=browser_profile)
+driver = webdriver.Chrome( options=browser_profile, service=service)
 
 driver.get(url)
 sleep(10)

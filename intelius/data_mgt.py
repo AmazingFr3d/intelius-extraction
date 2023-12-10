@@ -98,15 +98,14 @@ def clean_up():
 
     for index, row in data.iterrows():
         if len(row['Email']) > 0 and row['Phone_Number'] != '[]' and row['Email'] != '[]' and row[
-            'Street_Address'] != '[]':
+            'Street_Address'] != '[]' and len(row['Job Title']) > 0:
             res.append(
                 {
                     'First Name': row['First_Name'],
                     'Last Name': row['Last_Name'],
                     'Email': row['Email'],
                     'Phone Number': row['Phone_Number'],
-                    'City': row['City'],
-                    'State/Region': row['State/Region'],
+                    'Job Title': row['Job Title'],
                     'Street Address': row['Street_Address'],
 
                 }

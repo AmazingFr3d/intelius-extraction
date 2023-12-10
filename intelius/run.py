@@ -1,8 +1,8 @@
-from intelius import data
-from intelius import name_search as ns
+import data
+import name_search as ns
 
 names = data.names
-state = 'Texas'
+# state = 'Texas'
 # city = data.city[28]
 
 

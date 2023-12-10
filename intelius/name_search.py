@@ -1,10 +1,14 @@
-from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException
-from time import sleep
 import datetime as dt
+from time import sleep
+
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.by import By
+
 
 import intelius
-from intelius import data, data_mgt
+import data
+import data_mgt
+
 
 delay = 15
 driver = intelius.driver
@@ -14,7 +18,7 @@ def single_name(name: str):
     intelius.login()
     email_list = ''
     address = ''
-    phone_list = ''
+    job_title = ''
     split = name.split(" ")
     try:
         driver.find_element(By.CLASS_NAME, "search-form")
@@ -26,34 +30,39 @@ def single_name(name: str):
         driver.find_element(By.XPATH, "//button[@type='submit']").click()
         sleep(delay)
 
-        try:
-            driver.find_element(By.CLASS_NAME, "button-link").click()
-            sleep(delay)
-
+        # Age filter
+        age = driver.find_element(By.XPATH, "//div[contains(@class, 'age')]/h3/text()").text
+        if age > 65:
+            pass
+        else:
             try:
-                emails = driver.find_elements(By.XPATH,
-                                              "//div[@class='record-subsection emails-subsection']//div[@class='section-table-header']/h5")
-                email_list = [x.text.lower() for x in emails]
+                driver.find_element(By.CLASS_NAME, "button-link").click()
+                sleep(delay)
+                try:
+                    emails = driver.find_elements(By.XPATH,
+                                                  "//div[@class='record-subsection emails-subsection']//div["
+                                                  "@class='section-table-header']/h5")
+                    email_list = [x.text.lower() for x in emails]
 
-                phones = driver.find_elements(By.XPATH, "//span[@class='phone-number']")
-                phone_list = [x.text for x in phones]
+                    address = driver.find_element(By.XPATH,
+                                                  "//div[@class='location-subsection-item']//p[@class='ui-text medium']").text
 
-                address = driver.find_element(By.XPATH,
-                                              "//div[@class='location-subsection-item']//p[@class='ui-text medium']").text
+                    job_title = driver.find_element(By.XPATH, "(//div[contains(@class, 'job-section')]//h2[@class='job-title'])[1]/text()").text
+
+
+                except NoSuchElementException:
+                    email_list = ''
+                    address = ''
+                    job_title = ''
 
             except NoSuchElementException:
                 email_list = ''
-                phone_list = ''
                 address = ''
-
-        except NoSuchElementException:
-            email_list = ''
-            phone_list = ''
-            address = ''
+                job_title = ''
     except NoSuchElementException:
         pass
 
-    contact_list = [email_list, phone_list, address]
+    contact_list = [email_list, address, job_title]
 
     return contact_list
 
@@ -78,8 +87,8 @@ def multi_name(names):
                 'First_Name': firstname,
                 'Last_Name': lastname,
                 'Email': contact[0],
-                'Phone_Number': contact[1],
-                'Street_Address': contact[2]
+                'Job Title': contact[2],
+                'Street_Address': contact[1]
 
             }
         )
