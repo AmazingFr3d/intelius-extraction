@@ -10,7 +10,7 @@ import pandas as pd
 
 from intelius import creds
 
-delay = 15
+delay = 10
 username = creds.username
 password = creds.password
 url = "https://www.intelius.com/dashboard"
@@ -25,6 +25,7 @@ if not os.path.isfile("bank.csv"):
             'Email': '',
             'Job Title': '',
             'Street Address': '',
+            'Age': ''
         }
     ]
     df = pd.DataFrame(headers)
@@ -46,6 +47,6 @@ def login():
         driver.find_element(By.NAME, "email").send_keys(username)
         driver.find_element(By.NAME, "password").send_keys(password)
         driver.find_element(By.XPATH, "//button[@type='submit']").click()
-        sleep(15)
+        sleep(10)
     except NoSuchElementException:
         pass

@@ -1,16 +1,14 @@
 import datetime as dt
 from time import sleep
 
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, InvalidSelectorException
 from selenium.webdriver.common.by import By
-
 
 import intelius
 import data
 import data_mgt
 
-
-delay = 15
+delay = 10
 driver = intelius.driver
 
 
@@ -19,6 +17,7 @@ def single_name(name: str):
     email_list = ''
     address = ''
     job_title = ''
+    age = ''
     split = name.split(" ")
     try:
         driver.find_element(By.CLASS_NAME, "search-form")
@@ -30,39 +29,48 @@ def single_name(name: str):
         driver.find_element(By.XPATH, "//button[@type='submit']").click()
         sleep(delay)
 
-        # Age filter
-        age = driver.find_element(By.XPATH, "//div[contains(@class, 'age')]/h3/text()").text
-        if age > 65:
-            pass
-        else:
+        try:
+            driver.find_element(By.CLASS_NAME, "button-link").click()
+            sleep(delay)
             try:
-                driver.find_element(By.CLASS_NAME, "button-link").click()
-                sleep(delay)
-                try:
-                    emails = driver.find_elements(By.XPATH,
-                                                  "//div[@class='record-subsection emails-subsection']//div["
-                                                  "@class='section-table-header']/h5")
-                    email_list = [x.text.lower() for x in emails]
+                emails = driver.find_elements(By.XPATH,
+                                              "//div[@class='record-subsection emails-subsection']//div["
+                                              "@class='section-table-header']/h5")
+                email_list = [x.text.lower() for x in emails]
 
+                try:
                     address = driver.find_element(By.XPATH,
                                                   "//div[@class='location-subsection-item']//p[@class='ui-text medium']").text
-
-                    job_title = driver.find_element(By.XPATH, "(//div[contains(@class, 'job-section')]//h2[@class='job-title'])[1]/text()").text
-
-
                 except NoSuchElementException:
-                    email_list = ''
                     address = ''
-                    job_title = ''
+
+                job_title = driver.find_element(By.XPATH,
+                                                "(//div[contains(@class, 'job-section')]//h2[@class='job-title'])[1]").text
+
+                try:
+                    age = driver.find_element(By.XPATH, "(//div[contains(@class, 'header-content')]//p)[1]").text
+                    if len(age) > 0:
+                        age_li = age.split()
+                        age = int(age_li[1])
+                except NoSuchElementException:
+                    age = ''
 
             except NoSuchElementException:
                 email_list = ''
                 address = ''
                 job_title = ''
+                age = ''
+
+        except NoSuchElementException:
+            email_list = ''
+            address = ''
+            job_title = ''
+            age = ''
+
     except NoSuchElementException:
         pass
 
-    contact_list = [email_list, address, job_title]
+    contact_list = [email_list, address, job_title, age]
 
     return contact_list
 
@@ -87,8 +95,9 @@ def multi_name(names):
                 'First_Name': firstname,
                 'Last_Name': lastname,
                 'Email': contact[0],
-                'Job Title': contact[2],
-                'Street_Address': contact[1]
+                'Job_Title': contact[2],
+                'Street_Address': contact[1],
+                'Age': contact[3]
 
             }
         )
@@ -120,7 +129,7 @@ def multi_name(names):
         d = date_time.strftime("%d-%m-%y %H:%M")
         dl = d.split()
 
-        print(f"{count} | {firstname} {lastname}")
+        print(f"{count} | {firstname} {lastname} | {contact[2]} | {contact[3]}")
         print(f"Saves = {saves}")
         print(f'Date: {dl[0]} | Time : {dl[1]}\n')
 
