@@ -110,8 +110,8 @@ def clean_up():
 
     append(df)
 
-    for csv in csv_list:
-        shutil.move(csv, f'results/{csv}')
+    # for csv in csv_list:
+    #     shutil.move(csv, f'results/{csv}')
 
     # date_time = d.datetime.now()
     # dt = date_time.strftime("%d_%m_%y_%H_%M")
