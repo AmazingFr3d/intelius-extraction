@@ -11,6 +11,8 @@ delay = intelius.delay
 
 def single_email(email: str):
     intelius.login()
+    address = ''
+    job_title = ''
 
     if driver.find_element(By.CLASS_NAME, "search-form"):
         driver.find_element(By.XPATH,
@@ -25,14 +27,21 @@ def single_email(email: str):
             sleep(delay)
 
             try:
-                phone_no = driver.find_element(By.CLASS_NAME, "phone-number").text
+                address = driver.find_element(By.XPATH,
+                                              "//div[@class='location-subsection-item']//p[@class='ui-text medium']").text
+
+                job_title = driver.find_element(By.XPATH,
+                                                "(//div[contains(@class, 'job-section')]//h2[@class='job-title'])[1]/text()").text
+
             except NoSuchElementException:
-                phone_no = "N/A"
+                address = ''
+                job_title = ''
 
         except NoSuchElementException:
-            phone_no = "N/A"
-
-    return phone_no
+            address = ''
+            job_title = ''
+        result_list = [address, job_title]
+    return result_list
 
 
 def multi_emails(emails):

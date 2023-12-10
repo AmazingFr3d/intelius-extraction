@@ -46,7 +46,6 @@ def append(ds):
     csv_append = csv_append._append(df, ignore_index=True)
 
     csv_append = csv_append.drop_duplicates(subset=["Email"])
-    csv_append = csv_append.drop_duplicates(subset=["Phone Number"])
     csv_append = csv_append.dropna().reset_index(drop=True)
 
     csv_append.to_csv("bank.csv", index=False)
@@ -60,18 +59,18 @@ def clean_up():
               'outlook.com']
 
     data['Email'] = data['Email'].astype(str)
-    data['Phone_Number'] = data['Phone_Number'].astype(str)
     data['Street_Address'] = data['Street_Address'].astype(str)
 
     data.dropna(inplace=True)
 
     for index, row in data.iterrows():
-        if row['Email'] != '[]' and row['Phone_Number'] != '[]' and row['Street_Address'] != []:
+        if row['Email'] != '[]' and row['Street_Address'] != []:
 
             row['Email'] = row['Email'].replace("'", "")
             row['Email'] = row['Email'].replace("[", "")
             row['Email'] = row['Email'].replace("]", "")
             row['Email'] = row['Email'].split(',')
+            print(type(row['Email']))
 
             for m in row['Email']:
                 for s in suffix:
@@ -80,15 +79,11 @@ def clean_up():
 
             row['Email'] = temp_list
             temp_list = []
+            print(type(row['Email']))
 
             if row['Email'] and row['Email'] != [] and row['Street_Address'] != []:
                 row['Email'] = row['Email'][0]
-
-            row['Phone_Number'] = row['Phone_Number'].replace("'", "")
-            row['Phone_Number'] = row['Phone_Number'].replace("[", "")
-            row['Phone_Number'] = row['Phone_Number'].replace("]", "")
-            row['Phone_Number'] = row['Phone_Number'].split(',')
-            row['Phone_Number'] = row['Phone_Number'][0]
+                print(type(row['Email']))
 
             # row['Street_Address'] = row['Street_Address'].replace("',", "")
             # row['Street_Address'] = row['Street_Address'].replace("[", "")
@@ -96,24 +91,22 @@ def clean_up():
             # row['Street_Address'] = row['Street_Address'].split(',')
             # row['Street_Address'] = row['Street_Address'][0]
 
-    for index, row in data.iterrows():
-        if len(row['Email']) > 0 and row['Phone_Number'] != '[]' and row['Email'] != '[]' and row[
-            'Street_Address'] != '[]' and len(row['Job Title']) > 0:
+        if len(row['Email']) > 0 and row['Email'] != '[]' and row[
+            'Street_Address'] != '[]' and len(row['Job_Title']) > 0:
             res.append(
                 {
                     'First Name': row['First_Name'],
                     'Last Name': row['Last_Name'],
                     'Email': row['Email'],
-                    'Phone Number': row['Phone_Number'],
-                    'Job Title': row['Job Title'],
+                    'Job Title': row['Job_Title'],
                     'Street Address': row['Street_Address'],
+                    'Age': row['Age']
 
                 }
             )
 
     df = pd.DataFrame(res)
     df = df.drop_duplicates(subset=["Email"])
-    df = df.drop_duplicates(subset=["Phone Number"])
 
     append(df)
 
@@ -129,4 +122,4 @@ def clean_up():
     # to_csv(df1, "clean_combined_extraction.csv")
 
 
-# clean_up()
+clean_up()
