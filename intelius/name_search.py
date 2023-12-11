@@ -38,39 +38,26 @@ def single_name(name: str):
                                               "@class='section-table-header']/h5")
                 email_list = [x.text.lower() for x in emails]
 
-                try:
-                    address = driver.find_element(By.XPATH,
-                                                  "//div[@class='location-subsection-item']//p[@class='ui-text medium']").text
-                except NoSuchElementException:
-                    address = ''
+                address = driver.find_element(By.XPATH,
+                                              "//div[@class='location-subsection-item']//p[@class='ui-text medium']").text
 
                 job_title = driver.find_element(By.XPATH,
                                                 "(//div[contains(@class, 'job-section')]//h2[@class='job-title'])[1]").text
-
-                try:
-                    age = driver.find_element(By.XPATH, "(//div[contains(@class, 'header-content')]//p)[1]").text
-                    if len(age) > 0:
-                        age_li = age.split()
-                        age = int(age_li[1])
-                except NoSuchElementException:
-                    age = ''
 
             except NoSuchElementException:
                 email_list = ''
                 address = ''
                 job_title = ''
-                age = ''
 
         except NoSuchElementException:
             email_list = ''
             address = ''
             job_title = ''
-            age = ''
 
     except NoSuchElementException:
         pass
 
-    contact_list = [email_list, address, job_title, age]
+    contact_list = [email_list, address, job_title]
 
     return contact_list
 
@@ -97,7 +84,6 @@ def multi_name(names):
                 'Email': contact[0],
                 'Job_Title': contact[2],
                 'Street_Address': contact[1],
-                'Age': contact[3]
 
             }
         )
@@ -118,7 +104,7 @@ def multi_name(names):
             last_id = names.iloc[index + 1]
         except IndexError:
             data.to_csv(new_info, "contact")
-            names.drop(names.index[:10], inplace=True)
+            names.drop(names.index[:len(names)], inplace=True)
             names.to_csv("input.csv", index=False)
             count = 0
             saves += 1
@@ -129,7 +115,7 @@ def multi_name(names):
         d = date_time.strftime("%d-%m-%y %H:%M")
         dl = d.split()
 
-        print(f"{count} | {firstname} {lastname} | {contact[2]} | {contact[3]}")
+        print(f"{count} | {firstname} {lastname} | {contact[2]}")
         print(f"Saves = {saves}")
         print(f'Date: {dl[0]} | Time : {dl[1]}\n')
 

@@ -60,6 +60,7 @@ def clean_up():
 
     data['Email'] = data['Email'].astype(str)
     data['Street_Address'] = data['Street_Address'].astype(str)
+    data['Job_Title'] = data['Job_Title'].astype(str)
 
     data.dropna(inplace=True)
 
@@ -70,7 +71,7 @@ def clean_up():
             row['Email'] = row['Email'].replace("[", "")
             row['Email'] = row['Email'].replace("]", "")
             row['Email'] = row['Email'].split(',')
-            print(type(row['Email']))
+
 
             for m in row['Email']:
                 for s in suffix:
@@ -79,11 +80,10 @@ def clean_up():
 
             row['Email'] = temp_list
             temp_list = []
-            print(type(row['Email']))
+
 
             if row['Email'] and row['Email'] != [] and row['Street_Address'] != []:
                 row['Email'] = row['Email'][0]
-                print(type(row['Email']))
 
             # row['Street_Address'] = row['Street_Address'].replace("',", "")
             # row['Street_Address'] = row['Street_Address'].replace("[", "")
@@ -100,7 +100,6 @@ def clean_up():
                     'Email': row['Email'],
                     'Job Title': row['Job_Title'],
                     'Street Address': row['Street_Address'],
-                    'Age': row['Age']
 
                 }
             )
@@ -110,8 +109,8 @@ def clean_up():
 
     append(df)
 
-    # for csv in csv_list:
-    #     shutil.move(csv, f'results/{csv}')
+    for csv in csv_list:
+        shutil.move(csv, f'results/{csv}')
 
     # date_time = d.datetime.now()
     # dt = date_time.strftime("%d_%m_%y_%H_%M")
@@ -122,4 +121,4 @@ def clean_up():
     # to_csv(df1, "clean_combined_extraction.csv")
 
 
-clean_up()
+# clean_up()

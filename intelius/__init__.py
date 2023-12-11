@@ -25,7 +25,6 @@ if not os.path.isfile("bank.csv"):
             'Email': '',
             'Job Title': '',
             'Street Address': '',
-            'Age': ''
         }
     ]
     df = pd.DataFrame(headers)
